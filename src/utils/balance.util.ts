@@ -5,7 +5,7 @@ import {
   JsonRpcProvider,
   ZeroAddress,
 } from 'ethers';
-import { ERC20ABI } from './erc20.abi';
+import { ERC20ABI } from './abis/erc20.abi';
 import { Logger } from '@nestjs/common';
 
 type Balance = {

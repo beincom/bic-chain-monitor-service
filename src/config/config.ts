@@ -1,22 +1,85 @@
-import { Addressable } from "ethers";
+import { Addressable, AddressLike, getAddress, isAddress } from "ethers";
 
 export interface IConfig {
+    provider: IProvider;
     faucetStation: IFaucetStation;
-    gasStation: IGasStation;
-    paymasterStation: IPaymasterStation;
+    redeemStation: IRedeemStation;
+    paymaster: IPaymaster;
+}
+
+export interface IProvider {
+    rpc: string;
+    chainId: number;
+    networkName: string;
+    env: string;
 }
 
 export interface IFaucetStation {
-    operators: Addressable[],
+    operators: Addressable[];
+    gasLimit: number;
+    monitoredToken: Addressable;
+    faucetAmount: number;
     threshold: number;
+    emergency: number;
 }
 
-export interface IGasStation {
-    operators: Addressable[],
+export interface IRedeemStation {
+    operators: Addressable[];
+    gasLimit: number;
     threshold: number;
+    emergency: number;
 }
 
-export interface IPaymasterStation {
-    operators: Addressable[],
+export interface IPaymaster {
+    entrypoint: Addressable,
+    paymaster: Addressable,
+    gasLimit: number;
     threshold: number;
+    emergency: number;
+}
+
+export function getConfigs(): IConfig {
+    return {
+        provider: {
+            rpc: process.env.RPC_PROVIDER,
+            chainId: parseInt(process.env.CHAINID),
+            networkName: process.env.NETWORK_NAME,
+            env: process.env.ENV
+        },
+        faucetStation: {
+            operators: (process.env.FAUCET_OPERATORS || '')
+            .split(',')
+            .filter((val: string) => {
+                if (!isAddress(val)) {
+                    throw new Error(`Invalid faucet operator: ${val}`);
+                }
+                return val
+            }) as unknown[] as Addressable[],
+            gasLimit: parseInt(process.env.FAUCET_GAS_LIMIT),
+            monitoredToken: process.env.FAUCET_MONITORED_TOKEN as unknown as Addressable,
+            faucetAmount: parseInt(process.env.FAUCET_AMOUNT),
+            threshold: parseInt(process.env.FAUCET_THRESHOLD),
+            emergency: parseInt(process.env.FAUCET_EMERGENCY)
+        },
+        redeemStation: {
+            operators: (process.env.REDEEM_OPERATORS || '')
+            .split(',')
+            .filter((val: string) => {
+                if (!isAddress(val)) {
+                    throw new Error(`Invalid redeem operator: ${val}`);
+                }
+                return val
+            })as unknown[] as Addressable[],
+            gasLimit: parseInt(process.env.REDEEM_GAS_LIMIT),
+            threshold: parseInt(process.env.REDEEM_THRESHOLD),
+            emergency: parseInt(process.env.REDEEM_EMERGENCY)
+        },
+        paymaster: {
+            entrypoint: process.env.PAYMASTER_ENTRYPOINT as unknown as Addressable,
+            paymaster: process.env.PAYMASTER_PAYMASTER as unknown as Addressable,
+            gasLimit: parseInt(process.env.PAYMASTER_GAS_LIMIT),
+            threshold: parseInt(process.env.PAYMASTER_THRESHOLD),
+            emergency: parseInt(process.env.PAYMASTER_EMERGENCY)
+        }
+    }
 }

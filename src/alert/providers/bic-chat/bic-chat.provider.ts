@@ -18,7 +18,7 @@ export class BicChatAlertProvider implements IAlertProvider {
       // TODO
       return {
         ...BALANCE_BOT,
-        text: '', // create msg here , support markdown
+        text: message.message, // create msg here , support markdown
       };
     }
     return {
