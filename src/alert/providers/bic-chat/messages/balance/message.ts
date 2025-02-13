@@ -93,6 +93,30 @@ ${JSON.stringify(data.parameters, null, 4)}
 \`\`\`
 `;
 
+export const bonusMessage = (data: MessageData) =>
+  `** ✅ ${data.title}**
+
+| Detail   | Value                                      |
+|----------|--------------------------------------------|
+| ENV      | ${data.env}|
+| Network  | ${data.network}|
+| Time     | ${data.time}|
+| Operator     | ${data.parameters.operator}|
+| Token     | ${data.parameters.symbol}|
+| Balance     | ${data.parameters.balance}|
+| bonusAmount     | ${data.parameters.bonusAmount}|
+| Tolerance     | ${data.parameters.tolerance}|
+| Threshold     | ${data.parameters.threshold}|
+| Emergency     | ${data.parameters.emergency}|
+
+**Emergency Message**:
+${data.msg}
+**Parameters Detail**
+\`\`\`json
+${JSON.stringify(data.parameters, null, 4)}
+\`\`\`
+`;
+
 export const redeemMessage = (data: MessageData) =>
   `** ✅ ${data.title}**
 

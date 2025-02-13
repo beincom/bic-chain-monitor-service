@@ -1,8 +1,9 @@
-import { Addressable, AddressLike, getAddress, isAddress } from "ethers";
+import { Addressable, AddressLike, getAddress, isAddress, JsonRpcProvider } from "ethers";
 
 export interface IConfig {
     provider: IProvider;
     faucetStation: IFaucetStation;
+    bonusStation: IBonusStation;
     redeemStation: IRedeemStation;
     paymaster: IPaymaster;
 }
@@ -12,6 +13,7 @@ export interface IProvider {
     chainId: number;
     networkName: string;
     env: string;
+    rpcProvider: JsonRpcProvider;
 }
 
 export interface IFaucetStation {
@@ -19,6 +21,15 @@ export interface IFaucetStation {
     gasLimit: number;
     monitoredToken: Addressable;
     faucetAmount: number;
+    threshold: number;
+    emergency: number;
+}
+
+export interface IBonusStation {
+    operators: Addressable[];
+    gasLimit: number;
+    monitoredToken: Addressable;
+    bonusAmount: number;
     threshold: number;
     emergency: number;
 }
@@ -44,7 +55,8 @@ export function getConfigs(): IConfig {
             rpc: process.env.RPC_PROVIDER,
             chainId: parseInt(process.env.CHAINID),
             networkName: process.env.NETWORK_NAME,
-            env: process.env.ENV
+            env: process.env.ENV,
+            rpcProvider: new JsonRpcProvider(process.env.RPC_PROVIDER, parseInt(process.env.CHAINID))
         },
         faucetStation: {
             operators: (process.env.FAUCET_OPERATORS || '')
@@ -60,6 +72,21 @@ export function getConfigs(): IConfig {
             faucetAmount: parseInt(process.env.FAUCET_AMOUNT),
             threshold: parseInt(process.env.FAUCET_THRESHOLD),
             emergency: parseInt(process.env.FAUCET_EMERGENCY)
+        },
+        bonusStation: {
+            operators: (process.env.BONUS_OPERATORS || '')
+            .split(',')
+            .filter((val: string) => {
+                if (!isAddress(val)) {
+                    throw new Error(`Invalid faucet operator: ${val}`);
+                }
+                return val
+            }) as unknown[] as Addressable[],
+            gasLimit: parseInt(process.env.BONUS_GAS_LIMIT),
+            monitoredToken: process.env.BONUS_MONITORED_TOKEN as unknown as Addressable,
+            bonusAmount: parseInt(process.env.BONUS_AMOUNT),
+            threshold: parseInt(process.env.BONUS_THRESHOLD),
+            emergency: parseInt(process.env.BONUS_EMERGENCY)
         },
         redeemStation: {
             operators: (process.env.REDEEM_OPERATORS || '')
