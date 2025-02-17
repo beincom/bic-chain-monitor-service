@@ -27,7 +27,7 @@ export class FixedTask {
     this.paymasterStation = this._configService.get<IPaymaster>("paymaster");
   }
 
-  @Cron('* * 12 * * *', {
+  @Cron('0 0 12 * * *', {
     name: 'Check Balance'
   })
   checkBalance() {
@@ -134,7 +134,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('* * 12 * * *', {
+  @Cron('0 0 12 * * *', {
     name: 'Check paymaster deposit'
   })
   checkPaymasterDeposit() {
