@@ -176,7 +176,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('0 * * * * *', {
+  @Cron('0 */5 * * * *', {
     name: 'Monitor gas station'
   })
   monitorGasStation() {
@@ -231,7 +231,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('0 * * * * *', {
+  @Cron('0 */5 * * * *', {
     name: 'Monitor faucet station'
   })
   monitorFaucetStation() {
@@ -285,7 +285,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('0 * * * * *', {
+  @Cron('0 */5 * * * *', {
     name: 'Monitor bonus station'
   })
   monitorBonusStation() {
@@ -339,7 +339,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('0 * * * * *', {
+  @Cron('0 */5 * * * *', {
     name: 'Monitor redeem station'
   })
   monitorRedeemStation() {
@@ -392,7 +392,7 @@ export class FixedTask {
     }
   }
 
-  @Cron('0 * * * * *', {
+  @Cron('0 */5 * * * *', {
     name: 'Monitor paymaster station'
   })
   monitorPaymasterStation() {
